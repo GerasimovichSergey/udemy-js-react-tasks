@@ -3,7 +3,7 @@
 const inputRub = document.querySelector('#rub');
 const inputUsd = document.querySelector('#usd');
 
-document.addEventListener('input', () => {
+inputRub.addEventListener('input', () => {
     const request = new XMLHttpRequest();
 
     request.open('GET', 'js/current.json');
