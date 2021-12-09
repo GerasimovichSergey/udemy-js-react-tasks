@@ -193,12 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return await res.json();
     };
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuItems(img, altimg, title, descr, price, '.menu .container').render();
-            })
-        });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuItems(img, altimg, title, descr, price, '.menu .container').render();
+    //         })
+    //     });
+
+    // Используем библиотеку axios
+
+    axios.get('http://localhost:3000/menu')
+        .then(data => data.data.forEach(({img, altimg, title, descr, price}) => {
+            new MenuItems(img, altimg, title, descr, price, '.menu .container').render();
+        }));
 
     //альтернативный вариант создания карточек, тоже можно использовать
     // getResource('http://localhost:3000/menu')
@@ -345,6 +352,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(response => console.log(response));
+        .then(data => data.json());
+    // .then(response => console.log(response));
+
+    //Slider
+
+    const slides = document.querySelectorAll('.offer__slide');
+    const prev = document.querySelector('.offer__slider-prev');
+    const next = document.querySelector('.offer__slider-next');
+    const total = document.querySelector('#total');
+    const current = document.querySelector('#current');
+    let slideIndex = 1;
+
+    showSlide(slideIndex);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    function showSlide(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach(item => item.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    function plusSlide(n) {
+        showSlide(slideIndex += n);
+    }
+
+    prev.addEventListener('click', () => {
+        plusSlide(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlide(1);
+    });
+
+
 });
